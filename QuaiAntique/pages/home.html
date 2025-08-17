@@ -1,69 +1,84 @@
 <div class="hero-scene text-center text-white">
-    <div class="hero-scene-content">
-        <p>Le chef arnaud Michant vous invite au Quai Antique</p>
-        <h1> Quai Antique </h1>
-
-        <button class="btn btn-primary">Réserver</button>
-    </div>
+  <div class="hero-scene-content">
+    <p>Le chef Arnaud Michant vous invite au Quai Antique</p>
+    <h1>Quai Antique</h1>
+    <button class="btn btn-primary">Réserver</button>
+  </div>
 </div>
 
 <section>
-    <article>
-        <div class="container p-4">
-            <h2 class="text-center text-primary"> Bienvenue au Quai Antique</h2>
-            <div class="row row-cols-2 align-items-center">
-                <div class="col">
-                    <p class="text-justify">
-                        Bienvenue sur le site de notre restaurant gastronomique situé au coeur de la magnifique ville de Chambéry. Le chef Arnaut Michant vous invite à découvrir un voyage culinaire mémorable.
-                    </p>
-                </div>
-            </div class="col">
-                <img class="w-100 rounded" src="../images/chef.jpeg"/>
-            </div>
-        </div>
-        <div class="text-center pt-4">
-            <a href="#" class="btn btn-primary">Nos menus</a>
-        </div>
+  <!-- Article 1 : image gauche, texte droite (≥ md) -->
+  <article>
+    <div class="container py-4">
+      <h2 class="text-center text-primary mb-4">Bienvenue au Quai Antique</h2>
 
-    </article>
-        <article class="bg-black text-white">
-            <div class="container p-4">
-                <h2 class="text-center text-primary"> Des produits frais</h2>
-                <div class="row row-cols-2 align-items-center">            
-                    </div class="col">
-                        <img class="w-100 rounded" src="../images/saumon.jpeg"/>
-                    </div>
-                
-                    <div class="col">
-                        <p class="text-justify">
-                        Découvrez la richesse des saveurs avec nos plats élaborés. à partir de produits frais et de saison, cueillis localement.                    </p>
-                    </div>
-            </div>
-            <div class="text-center pt-4">
-                <a href="#" class="btn btn-primary">voir la galerie</a>
-            </div>
-
-    </article>
-        <article>
-        <div class="container p-4">
-            <h2 class="text-center text-primary"> Réservation en ligne</h2>
-            <div class="row row-cols-2 align-items-center">
-                <div class="col">
-                    <p class="text-justify">
-                    Vous pouvez directement réserver votre table sur ce site !
-                    Il suffit de cliquer sur le bouton
-                    ci-dessous.                    </p>
-                </div>
-            </div class="col">
-                <img class="w-100 rounded" src="../images/vin.jpeg"/>
-            </div>
+      <div class="row align-items-center g-4">
+        <!-- texte à droite dès md -->
+        <div class="col-12 col-md-7 order-md-2">
+          <p class="text-justify">
+            Bienvenue sur le site de notre restaurant gastronomique situé au cœur de la magnifique ville de Chambéry.
+            Le chef Arnaut Michant vous invite à découvrir un voyage culinaire mémorable.
+          </p>
         </div>
-        <div class="text-center pt-4">
-            <a href="#" class="btn btn-primary">Réserver</a>
+        <!-- image à gauche dès md -->
+        <div class="col-12 col-md-5 order-md-1">
+          <img class="img-fluid rounded" src="../images/chef.jpeg" alt="Le chef">
         </div>
+      </div>
 
-    </article>
+      <div class="text-center pt-4">
+        <a href="#" class="btn btn-primary">Nos menus</a>
+      </div>
+    </div>
+  </article>
 
+  <!-- Article 2 : texte gauche, image droite (≥ md) -->
+  <article class="bg-black text-white">
+    <div class="container py-4">
+      <h2 class="text-center text-primary mb-4">Des produits frais</h2>
+
+      <div class="row align-items-center g-4">
+        <!-- image à droite -->
+        <div class="col-12 col-md-5 order-md-2">
+          <img class="img-fluid rounded" src="../images/saumon.jpeg" alt="Saumon">
+        </div>
+        <!-- texte à gauche -->
+        <div class="col-12 col-md-7 order-md-1">
+          <p class="text-justify">
+            Découvrez la richesse des saveurs avec nos plats élaborés à partir de produits frais et de saison,
+            cueillis localement.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center pt-4">
+        <a href="#" class="btn btn-primary">Voir la galerie</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- Article 3 : image gauche, texte droite (≥ md) -->
+  <article>
+    <div class="container py-4">
+      <h2 class="text-center text-primary mb-4">Réservation en ligne</h2>
+
+      <div class="row align-items-center g-4">
+        <!-- texte à droite -->
+        <div class="col-12 col-md-7 order-md-2">
+          <p class="text-justify">
+            Vous pouvez directement réserver votre table sur ce site !
+            Il suffit de cliquer sur le bouton ci-dessous.
+          </p>
+        </div>
+        <!-- image à gauche -->
+        <div class="col-12 col-md-5 order-md-1">
+          <img class="img-fluid rounded" src="../images/vin.jpeg" alt="Verre de vin">
+        </div>
+      </div>
+
+      <div class="text-center pt-4">
+        <a href="#" class="btn btn-primary">Réserver</a>
+      </div>
+    </div>
+  </article>
 </section>
-
-
