@@ -11998,6 +11998,7 @@ p {
 
 .hero-scene {
   position: relative;
+  margin-bottom: 15px;
 }
 .hero-scene::before {
   content: "";
@@ -12023,4 +12024,36 @@ p {
 }
 .hero-scene .text-justify {
   text-align: justify;
+}
+
+.image-card {
+  position: relative;
+}
+.image-card img {
+  display: block;
+  width: 100%;
+  transition: all 0.3s;
+}
+.image-card .titre-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 2;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+.image-card:hover .titre-image {
+  opacity: 1;
+}
+.image-card:hover img {
+  filter: brightness(0.3);
+}
+
+.form-label {
+  color: primary;
 }/*# sourceMappingURL=main.css.map */

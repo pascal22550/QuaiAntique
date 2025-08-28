@@ -25,6 +25,7 @@ p{
 
 .hero-scene {
     position: relative;
+    margin-bottom: 15px;
     &::before{
         content:"";
         position: absolute;
@@ -54,4 +55,38 @@ p{
     .text-justify {
         text-align: justify;
     }
+}
+
+    .image-card{
+        position:relative;
+
+        img{
+            display: block;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .titre-image{
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 2; //passe au-dessus de l'image
+            color: #fff; // lisible sur l'assombrissement
+            margin: 0; // évite un décalage avec <p>
+            text-align: center;
+            white-space: nowrap; 
+        }
+
+        &:hover{
+            .titre-image{ opacity: 1; }
+            img{filter: brightness(0.3); }
+        }
+
+}
+
+.form-label{
+    color: primary;
 }
