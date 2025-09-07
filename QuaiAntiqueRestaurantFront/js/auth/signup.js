@@ -65,7 +65,7 @@ function validatePassword(input){
 
 function validateMail(input){
     // Définir mon regex
-    const emailRegex = `^[^\s@]+@[^\s@]+\.[^\s@]+$`;
+    const emailRegex = `^[^s@]+@[^s@]+\.[^\s@]+$`;
     const mailUser = input.value;
     if(mailUser.match(emailRegex)){
         input.classList.add("is-valid");
