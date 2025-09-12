@@ -2,22 +2,30 @@ on: push
 name: 🚀 Deploy website on push
 jobs:
   web-deploy:
-    name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v4
-    
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.6
-      with:
-        server: ftp-lerestaurantquaiantique.alwaysdata.net
-        username: lerestaurantquaiantique
-        password: ${{ secrets.ftp_password }}
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/node_modules/bootstrap/scss/**
-          **/node_modules/bootstrap/js/**
-          **/node_modules/bootsrap-icons/icons/**
-        server-dir: /www/
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # évite certains soucis Git (128)
+
+      # (optionnel) build avant envoi
+      # - uses: actions/setup-node@v4
+      #   with: { node-version: '18' }
+      # - run: npm ci && npm run build
+
+      - name: 📂 Sync files (FTPS explicite)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ftp-lerestaurantquaiantique.alwaysdata.net
+          username: lerestaurantquaiantique
+          password: ${{ secrets.ftp_password }}
+          protocol: ftps        # <— IMPORTANT
+          port: 21              # FTPS explicite (STARTTLS)
+          security: strict      # ou 'loose' si souci de certificat
+          # local-dir: ./dist/  # si tu déploies un build
+          server-dir: /www/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
