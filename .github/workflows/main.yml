@@ -5,6 +5,9 @@ on:
 jobs:
   web-deploy:
     runs-on: ubuntu-latest
+    env:
+      FRONT_DIR: QuaiAntiqueRestaurantFront
+
     steps:
       - name: 📥 Download repo as ZIP (no git, no submodules)
         run: |
@@ -16,23 +19,21 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/zipball/${{ github.sha }}"
           unzip -q repo.zip
           topdir="$(ls -d */ | head -n 1)"
-          # on garde uniquement le front
-          rm -rf QuaiAntiqueRestaurantFront
-          mv "$topdir/QuaiAntiqueRestaurantFront" ./QuaiAntiqueRestaurantFront
+          rm -rf "$FRONT_DIR"
+          mv "$topdir/$FRONT_DIR" "./$FRONT_DIR"
           rm -rf "$topdir" repo.zip
-          echo "Front content:"
-          ls -la QuaiAntiqueRestaurantFront || true
+          ls -la "$FRONT_DIR" || true
 
-      - name: 🟢 Setup Node (if package.json exists)
+      - name: 🟢 Setup Node (only if package.json exists)
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         uses: actions/setup-node@v5
         with:
           node-version: 20
 
-      - name: 📦 Install npm dependencies
+      - name: 📦 Install npm deps
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
+        working-directory: ${{ env.FRONT_DIR }}
         run: |
-          cd QuaiAntiqueRestaurantFront
           if [ -f package-lock.json ]; then
             npm ci
           else
@@ -41,5 +42,27 @@ jobs:
 
       - name: 🏗️ Build (optional)
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
+        working-directory: ${{ env.FRONT_DIR }}
         run: |
-          cd QuaiAnti
+          if npm run | grep -q " build"; then
+            npm run build
+          else
+            echo "No build script found. Skipping."
+          fi
+
+      - name: 📂 Sync files (FTPS implicite)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ftp-lerestaurantquaiantique.alwaysdata.net
+          username: lerestaurantquaiantique
+          password: ${{ secrets.ftp_password }}
+          protocol: ftps-legacy
+          port: 990
+          security: strict
+          timeout: 120000
+          local-dir: ${{ env.FRONT_DIR }}/
+          server-dir: /www/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
