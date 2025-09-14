@@ -6,31 +6,30 @@ jobs:
   web-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 🚚 Get latest code (front only, no submodules)
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: false
-          persist-credentials: false
-          filter: blob:none
-          sparse-checkout: |
-            QuaiAntiqueRestaurantFront
-          sparse-checkout-cone-mode: true
-
-      # (Optionnel) Sanity check
-      - name: Tree
+      - name: 📥 Download repo as ZIP (no git, no submodules)
         run: |
-          pwd
-          ls -la
-          find . -maxdepth 3 -name package.json -o -name .gitmodules -print || true
+          set -e
+          curl -sSL \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -o repo.zip \
+            "https://api.github.com/repos/${{ github.repository }}/zipball/${{ github.sha }}"
+          unzip -q repo.zip
+          topdir="$(ls -d */ | head -n 1)"
+          # on garde uniquement le front
+          rm -rf QuaiAntiqueRestaurantFront
+          mv "$topdir/QuaiAntiqueRestaurantFront" ./QuaiAntiqueRestaurantFront
+          rm -rf "$topdir" repo.zip
+          echo "Front content:"
+          ls -la QuaiAntiqueRestaurantFront || true
 
-      - name: Setup Node
+      - name: 🟢 Setup Node (if package.json exists)
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         uses: actions/setup-node@v5
         with:
           node-version: 20
 
-      - name: Install npm dependencies
+      - name: 📦 Install npm dependencies
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         run: |
           cd QuaiAntiqueRestaurantFront
@@ -40,29 +39,7 @@ jobs:
             npm install
           fi
 
-      - name: Build (optional)
+      - name: 🏗️ Build (optional)
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         run: |
-          cd QuaiAntiqueRestaurantFront
-          if npm run | grep -q " build"; then
-            npm run build
-          else
-            echo "No build script found. Skipping."
-          fi
-
-      - name: 📂 Sync files (FTPS implicite)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
-        with:
-          server: ftp-lerestaurantquaiantique.alwaysdata.net
-          username: lerestaurantquaiantique
-          password: ${{ secrets.ftp_password }}
-          protocol: ftps-legacy
-          port: 990
-          security: strict
-          timeout: 120000
-          local-dir: QuaiAntiqueRestaurantFront/
-          server-dir: /www/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+          cd QuaiAnti
