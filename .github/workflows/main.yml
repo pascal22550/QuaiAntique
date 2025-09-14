@@ -6,13 +6,24 @@ jobs:
   web-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 🚚 Get latest code
+      - name: 🚚 Get latest code (front only, no submodules)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
+          submodules: false
+          sparse-checkout: |
+            QuaiAntiqueRestaurantFront
+          sparse-checkout-cone: true
 
-      # Node seulement si un package.json existe dans le dossier front
+      # Debug (facultatif) : voir ce qui a été récupéré
+      - name: Tree
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 3 -type f -name "package.json" -o -name ".gitmodules" -print
+
+      # Node seulement si un package.json existe dans le front
       - name: Setup Node
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         uses: actions/setup-node@v5
@@ -22,36 +33,4 @@ jobs:
       - name: Install npm dependencies
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         run: |
-          cd QuaiAntiqueRestaurantFront
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
-
-      - name: Build (optional)
-        if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
-        run: |
-          cd QuaiAntiqueRestaurantFront
-          if npm run | grep -q " build"; then
-            npm run build
-          else
-            echo "No build script found. Skipping."
-          fi
-
-      - name: 📂 Sync files (FTPS implicite)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
-        with:
-          server: ftp-lerestaurantquaiantique.alwaysdata.net
-          username: lerestaurantquaiantique
-          password: ${{ secrets.ftp_password }}
-          protocol: ftps-legacy   # Port 990 (FTPS implicite)
-          port: 990
-          security: strict        # Mets 'loose' si souci de cert TLS
-          timeout: 120000
-          local-dir: QuaiAntiqueRestaurantFront/
-          server-dir: /www/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+          c
