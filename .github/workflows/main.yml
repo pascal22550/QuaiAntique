@@ -7,21 +7,19 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # évite git 128 (diff complet)
+          fetch-depth: 0
 
-      # (optionnel) build front ici si nécessaire
-
-      - name: 📂 Sync files (FTPS)
+      - name: 📂 Sync files (FTPS implicite)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ftp-lerestaurantquaiantique.alwaysdata.net
           username: lerestaurantquaiantique
-          password: ${{ secrets.ftp_password }}   # garde le même secret que tu as créé
-          protocol: ftps        # FTPS explicite (AUTH TLS)
-          port: 21
-          security: strict      # ou 'loose' si souci de cert
+          password: ${{ secrets.ftp_password }}
+          protocol: ftps-legacy   # <— ICI
+          port: 990               # <— ICI
+          security: strict        # <— ICI (ou 'loose' si souci de cert)
           timeout: 120000
-          local-dir: QuaiAntiqueRestaurantFront/   # déploie le front seulement
+          local-dir: QuaiAntiqueRestaurantFront/
           server-dir: /www/
           exclude: |
             **/.git*
