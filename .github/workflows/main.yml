@@ -1,5 +1,7 @@
-on: push
 name: 🚀 Deploy website on push
+on:
+  push:
+
 jobs:
   web-deploy:
     runs-on: ubuntu-latest
@@ -9,23 +11,43 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install dependencies
+      # Node seulement si un package.json est présent dans le dossier front
+      - name: Setup Node
+        if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         uses: actions/setup-node@v5
         with:
           node-version: 20
 
-      - name : Install npm dependencies
-        run: npm install
-        
+      - name: Install npm dependencies
+        if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
+        run: |
+          cd QuaiAntiqueRestaurantFront
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      # Optionnel : build si un script "build" existe
+      - name: Build (optional)
+        if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
+        run: |
+          cd QuaiAntiqueRestaurantFront
+          if npm run | grep -q " build"; then
+            npm run build
+          else
+            echo "No build script found. Skipping."
+          fi
+
       - name: 📂 Sync files (FTPS implicite)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ftp-lerestaurantquaiantique.alwaysdata.net
           username: lerestaurantquaiantique
           password: ${{ secrets.ftp_password }}
-          protocol: ftps-legacy   # <— ICI
-          port: 990               # <— ICI
-          security: strict        # <— ICI (ou 'loose' si souci de cert)
+          protocol: ftps-legacy   # Port 990 (FTPS implicite)
+          port: 990
+          security: strict        # Passe à 'loose' si souci de cert TLS
           timeout: 120000
           local-dir: QuaiAntiqueRestaurantFront/
           server-dir: /www/
