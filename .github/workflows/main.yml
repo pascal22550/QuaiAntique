@@ -10,8 +10,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      # Node seulement si un package.json est présent dans le dossier front
+      # Node seulement si un package.json existe dans le dossier front
       - name: Setup Node
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         uses: actions/setup-node@v5
@@ -28,7 +29,6 @@ jobs:
             npm install
           fi
 
-      # Optionnel : build si un script "build" existe
       - name: Build (optional)
         if: ${{ hashFiles('QuaiAntiqueRestaurantFront/package.json') != '' }}
         run: |
@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.ftp_password }}
           protocol: ftps-legacy   # Port 990 (FTPS implicite)
           port: 990
-          security: strict        # Passe à 'loose' si souci de cert TLS
+          security: strict        # Mets 'loose' si souci de cert TLS
           timeout: 120000
           local-dir: QuaiAntiqueRestaurantFront/
           server-dir: /www/
