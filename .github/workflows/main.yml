@@ -9,19 +9,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      # (si tu déploies un build front)
-      # - uses: actions/setup-node@v4
-      #   with: { node-version: '18' }
-      # - run: npm ci && npm run build
-
-      - name: 📂 Deploy via SFTP (rsync)
-        uses: easingthemes/ssh-deploy@v5
+      - name: 📂 Sync files (FTPS explicite)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-az --delete"
-          # Déploie seulement le front (évite d'envoyer le back sur le webroot)
-          SOURCE: "QuaiAntiqueRestaurantFront/"
-          REMOTE_HOST: ssh-lerestaurantquaiantique.alwaysdata.net
-          REMOTE_USER: lerestaurantquaiantique
-          REMOTE_PORT: 22
-          TARGET: "/home/lerestaurantquaiantique/www/"
+          server: ftp-lerestaurantquaiantique.alwaysdata.net
+          username: lerestaurantquaiantique
+          password: ${{ secrets.ftp_password }}
+          protocol: ftps          # <— IMPORTANT
+          port: 21
+          security: explicit
+          passive: true           # évite ECONNRESET
+          timeout: 120000
+          server-dir: /www/
+          local-dir: QuaiAntiqueRestaurantFront/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
